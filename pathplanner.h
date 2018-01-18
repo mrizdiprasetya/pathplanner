@@ -11,6 +11,7 @@
 #include <queue>
 #include <mutex>
 #include "node.h"
+#include "obstacle.h"
 
 class pathplanner {
 public:
@@ -18,10 +19,12 @@ public:
     void start();
     void setStart(node n);
     void setGoal(node n);
+    void setObstacle();
     int getNodeSize();
 
 private:
     std::vector<node> nodes;
+    std::vector<obstacle> ooo;
     std::queue<coordinate> qList;
     std::thread threads[8];
     std::mutex m1, m2, m3;
@@ -41,6 +44,8 @@ private:
     void generateTree(int pid);
     void generatePath();
     void optimzer();
+    bool noCollision(node n2, node n1);
+    bool ccw(coordinate A, coordinate B, coordinate C);
     double calcDist(coordinate c1, coordinate c2);
     double chance;
     double eps;

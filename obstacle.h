@@ -6,8 +6,21 @@
 #define PATHPLANNING_OBSTACLE_H
 
 
-class obstacle {
+#include "coordinate.h"
 
+class obstacle {
+public:
+    obstacle();
+    obstacle(double x, double y, double xl, double yl);
+    coordinate getCoord();
+    double getX();
+    double getY();
+    double getXl();
+    double getYl();
+private:
+    coordinate c;
+    double xl;
+    double yl;
 };
 
 

@@ -189,7 +189,6 @@ void pathplanner::generateTree(int pid) {
                 }
             }
         }
-        //point2 = q_new.getCoord();
         pathplanner::nodes.push_back(q_new);
         m3.unlock();
     }
@@ -265,4 +264,53 @@ coordinate pathplanner::steer(coordinate c1, coordinate c2, double val) {
 
 int pathplanner::getNodeSize() {
     return pathplanner::nodes.size();
+}
+
+bool pathplanner::noCollision(node n2, node n1) {
+    int nc = 1;
+    int ints1, ints2, ints3, ints4;
+    coordinate A, B;
+    coordinate C1, C2, C3, C4;
+    coordinate D1, D2, D3, D4;
+    double obs[4];
+    for(int j = 0; j<pathplanner::ooo.size(); j++)
+    {
+        obs[0] = o[j].getX() - 2;
+        obs[1] = o[j].getY() - 2;
+        obs[2] = o[j].getX() + o[j].getXl() + 2;
+        obs[3] = o[j].getY() + o[j].getYl() + 2;
+
+        C1.setCoord(obs[0],obs[1]);
+        C2.setCoord(obs[0],obs[1]);
+        C3.setCoord(obs[2],obs[3]);
+        C4.setCoord(obs[2],obs[3]);
+
+        D1.setCoord(obs[0],obs[3]);
+        D2.setCoord(obs[2],obs[1]);
+        D3.setCoord(obs[2],obs[1]);
+        D4.setCoord(obs[0],obs[3]);
+
+        ints1 = pathplanner::ccw(A,C1,D1) != pathplanner::ccw(B,C1,D1) && pathplanner::ccw(A,B,C1) != pathplanner::ccw(A,B,D1);
+        ints2 = pathplanner::ccw(A,C2,D2) != pathplanner::ccw(B,C2,D2) && pathplanner::ccw(A,B,C2) != pathplanner::ccw(A,B,D2);
+        ints3 = pathplanner::ccw(A,C3,D3) != pathplanner::ccw(B,C3,D3) && pathplanner::ccw(A,B,C3) != pathplanner::ccw(A,B,D3);
+        ints4 = pathplanner::ccw(A,C4,D4) != pathplanner::ccw(B,C4,D4) && pathplanner::ccw(A,B,C4) != pathplanner::ccw(A,B,D4);
+
+        if(ints1 == 0 && ints2 == 0 && ints3 == 0 && ints4 == 0)
+        {
+            nc = nc && 1;
+        }
+        else
+        {
+            nc = nc && 0;
+        }
+    }
+    return nc;
+}
+
+bool pathplanner::ccw(coordinate A, coordinate B, coordinate C) {
+    return (C.getY()-A.getY()) * (B.getX()-A.getX()) > (B.getY()-A.getY()) * (C.getX()-A.getX());
+}
+
+void pathplanner::setObstacle() {
+
 }
